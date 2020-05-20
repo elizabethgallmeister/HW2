@@ -3,9 +3,14 @@
 
 #include <QMainWindow>
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
+#include <QSlider>
+#include <QSpinBox>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QCheckBox>
+#include <QPushButton>
+
 
 class MainWindow : public QMainWindow
 {
@@ -16,6 +21,6 @@ public:
     ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
+    QHBoxLayout* makeunit(std::string label);
 };
 #endif // MAINWINDOW_H
