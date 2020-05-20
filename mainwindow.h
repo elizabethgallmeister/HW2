@@ -9,7 +9,7 @@ QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+    Q_OBJECT // macro, needed whenever your class uses signals and slots
 
 public:
     MainWindow(QWidget *parent = nullptr);
