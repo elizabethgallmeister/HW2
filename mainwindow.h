@@ -2,15 +2,19 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
 #include <QSlider>
 #include <QSpinBox>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QVBoxLayout>
-#include <QCheckBox>
+#include <QRadioButton>
 #include <QPushButton>
-
+#include <QTextBrowser>
+#include <vector>
+#include <iostream>
+#include <QComboBox>
+#include <QAbstractButton>
+#include <QString>
 
 class MainWindow : public QMainWindow
 {
@@ -20,7 +24,17 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+public slots:
+    void buttonClicked();
+    void getGrade(bool checked);
+
 private:
-    QHBoxLayout* makeunit(std::string label);
+    QHBoxLayout* makeunit(int i);
+    QPushButton* calculate;
+    QLabel* calc2;
+    std::vector<QSpinBox*>grades;
+    int count = 0;
+    bool schemeA = true;
+    double finalGrade = 0;
 };
 #endif // MAINWINDOW_H
