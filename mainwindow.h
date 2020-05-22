@@ -27,6 +27,7 @@ public:
 public slots:
     void buttonClicked();
     //void getGrade(bool checked);
+    void resetButton();
 
 private:
     QHBoxLayout* makeunit(int i);

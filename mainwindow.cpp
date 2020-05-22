@@ -57,7 +57,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     QComboBox* classes = new QComboBox();
     classes -> addItem("PIC 10B: Intermediate Programming");
-    classes -> addItem("Math 61: Discrete Math");
+    classes -> addItem("PIC 10C: Advanced Programming");
     QLabel* course = new QLabel("Course:");
 
     QHBoxLayout* header = new QHBoxLayout();
@@ -69,14 +69,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     QVBoxLayout* col1 = new QVBoxLayout();
     for(int i = 1; i < 9; ++i)
-    {
         col1 -> addLayout(makeunit(i));
-    }
 
     schemeA = new QRadioButton("Schema A");
     schemeB = new QRadioButton("Schema B");
 
     calculate = new QPushButton("Calculate my grade!");
+    calculate->setStyleSheet("background-color: rgb(255,209,0);");
 
     QVBoxLayout* col2 = new QVBoxLayout();
     col2 -> addLayout(makeunit(9));
@@ -93,8 +92,15 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(schemeA, SIGNAL(toggled(bool)),
                      this, SLOT(getGrade(bool)));
 */
+
     QObject::connect(calculate, &QPushButton::clicked,
                      this, &MainWindow::buttonClicked);
+
+    QObject::connect(schemeA, SIGNAL(clicked()),
+                     this, SLOT(resetButton()));
+
+    QObject::connect(schemeB, SIGNAL(clicked()),
+                     this, SLOT(resetButton()));
 
     QHBoxLayout* overall = new QHBoxLayout();
     overall -> addLayout(col1);
@@ -110,7 +116,10 @@ void MainWindow::buttonClicked()
 {
     ++count;
     if( count % 2 == 0)
+    {
+        calculate->setStyleSheet("background-color: rgb(255,209,0);");
         calculate -> setText("Calculate my grade!");
+    }
     else
     {
         if(schemeA -> isChecked())  scheme1 = true;
@@ -136,10 +145,18 @@ void MainWindow::buttonClicked()
             else    finalGrade += 0.30*(grades[9]->value());
         }
 
-        QString text = "Your Grade: " + QString::number( finalGrade );
+        QString text = "Your Grade: " + QString::number( finalGrade, 'f', 2 );
+        calculate->setStyleSheet("background-color: rgb(39,116,174);color: rgb(255, 255, 255)");
         calculate -> setText(text);
 
     }
+}
+
+void MainWindow::resetButton()
+{
+    count = 0;
+    calculate->setStyleSheet("background-color: rgb(255,209,0);");
+    calculate -> setText("Calculate my grade!");
 }
 
 MainWindow::~MainWindow()
