@@ -26,15 +26,17 @@ public:
 
 public slots:
     void buttonClicked();
-    void getGrade(bool checked);
+    //void getGrade(bool checked);
 
 private:
     QHBoxLayout* makeunit(int i);
     QPushButton* calculate;
     QLabel* calc2;
+    QRadioButton* schemeA;
+    QRadioButton* schemeB;
     std::vector<QSpinBox*>grades;
     int count = 0;
-    bool schemeA = true;
+    bool scheme1 = true;
     double finalGrade = 0;
 };
 #endif // MAINWINDOW_H

@@ -34,7 +34,6 @@ QHBoxLayout* MainWindow::makeunit(int i)
 
     QSpinBox* box1 = new QSpinBox();
     box1 -> setRange(0,100);
-    std::cout << box1 -> value();
 
     QObject::connect(slide1, SIGNAL(valueChanged(int)),
                     box1, SLOT(setValue(int)));
@@ -74,10 +73,9 @@ MainWindow::MainWindow(QWidget *parent)
         col1 -> addLayout(makeunit(i));
     }
 
-    QRadioButton* schemeA = new QRadioButton("Schema A");
-    QRadioButton* schemeB = new QRadioButton("Schema B");
+    schemeA = new QRadioButton("Schema A");
+    schemeB = new QRadioButton("Schema B");
 
-    calc2 = new QLabel("Your Grade: 0.0");
     calculate = new QPushButton("Calculate my grade!");
 
     QVBoxLayout* col2 = new QVBoxLayout();
@@ -87,13 +85,16 @@ MainWindow::MainWindow(QWidget *parent)
     col2 -> addWidget(schemeA);
     col2 -> addWidget(schemeB);
     col2 -> addWidget(calculate);
-    col2 -> addWidget(calc2);
 
-    QObject::connect(calculate, &QPushButton::clicked,
-                     this, &MainWindow::buttonClicked);
-
+/*
     QObject::connect(schemeB, SIGNAL(toggled(bool)),
                      this, SLOT(getGrade(bool)));
+
+    QObject::connect(schemeA, SIGNAL(toggled(bool)),
+                     this, SLOT(getGrade(bool)));
+*/
+    QObject::connect(calculate, &QPushButton::clicked,
+                     this, &MainWindow::buttonClicked);
 
     QHBoxLayout* overall = new QHBoxLayout();
     overall -> addLayout(col1);
@@ -112,35 +113,32 @@ void MainWindow::buttonClicked()
         calculate -> setText("Calculate my grade!");
     else
     {
+        if(schemeA -> isChecked())  scheme1 = true;
+        else if(schemeB -> isChecked()) scheme1 = false;
+
+        int min = 100;
+        int hwTotal = 0;
+        for(size_t i = 0; i < grades.size()-3; ++i)
+        {
+            hwTotal += grades[i] -> value();
+            if(grades[i]->value() < min)
+                min = grades[i] -> value();
+        }
+        hwTotal -= min;
+        if(scheme1)
+        {
+            finalGrade = (0.25*hwTotal/7.0) + (.20*(grades[8]->value())) + (.20*(grades[9]->value())) + (.35*(grades[10]->value()));
+        }
+        else
+        {
+            finalGrade = (0.25*hwTotal/7.0) + (0.44*(grades[10]->value()));
+            if(grades[8]->value() > grades[9]->value()) finalGrade += 0.30*(grades[8]->value());
+            else    finalGrade += 0.30*(grades[9]->value());
+        }
+
         QString text = "Your Grade: " + QString::number( finalGrade );
         calculate -> setText(text);
-    }
-}
 
-void MainWindow::getGrade(bool checked)
-{
-    if(checked) schemeA = false;
-    int hwScore = 0;
-    std::vector<int> hwScores(0);
-    for(size_t i = 0; i < 8; ++i)
-    {
-        hwScores.push_back(grades[i]->value());
-        std::cout<< grades[i]->value() << std::endl;
-    }
-    sort(hwScores.begin(), hwScores.end());
-    if(schemeA)
-    {
-        for(size_t i = 0; i < hwScores.size()-1; ++i)
-            hwScore += hwScores[i];
-        finalGrade = (0.25*hwScore) + (.20*(grades[8]->value())) + (.20*(grades[9]->value())) + (.35*(grades[10]->value()));
-    }
-    else
-    {
-        for(size_t i = 0; i < hwScores.size()-1; ++i)
-            hwScore += hwScores[i];
-        finalGrade = (0.25*hwScore/7) + (0.44*(grades[10]->value()));
-        if(grades[8]->value() > grades[9]->value()) finalGrade += 0.30*(grades[8]->value());
-        else    finalGrade += 0.30*(grades[9]->value());
     }
 }
 
